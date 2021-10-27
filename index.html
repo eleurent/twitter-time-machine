@@ -1,0 +1,50 @@
+<script>
+
+/** https://github.com/igorbrigadir/twitter-advanced-search/ */
+
+function goBack() {
+	const url = new URL("https://twitter.com/search");
+
+	const query = document.getElementById('query').value;
+	const date = new Date(document.getElementById('date').value);
+	const airTime = document.getElementById('airTime').value;
+	const replayTime = document.getElementById('replayTime').value;
+	const top = document.getElementById("top").checked;
+
+	var until = new Date();
+	until.setDate(date.getDate());
+	until.setMonth(date.getMonth());
+	until.setFullYear(date.getFullYear());
+	delta = airTime.split(":")[0]*3600 + airTime.split(":")[1]*60 - replayTime.split(":")[0]*3600 - replayTime.split(":")[1]*60;
+	var timestamp = Math.floor(until / 1000 + delta);
+	var f = top ? "top" : "live";
+	
+	url.search = new URLSearchParams({
+	  q: query + " until_time:" + timestamp,
+	  src: "typed_query",
+	  f: f
+	});
+	window.open(url, '_blank').focus();
+}
+</script>
+
+<form action="#" onsubmit="return goBack();">
+	<label for="query">Query:</label>
+	<input id="query" type="text" value="Koh Lanta">
+	<label for="date">Date:</label>
+	<input id="date" type="date">
+	<label for="airTime">Air time:</label>
+	<input id="airTime" type="time" value="21:00">
+	<label for="replayTime">Replay time:</label>
+	<input id="replayTime" type="time" value="21:00">
+  	<input type="checkbox" id="top" name="top"
+         checked>
+  	<label for="top">Top</label>
+	<input type="submit">
+</form>
+
+<script>
+	var prevTuesday = new Date();
+	prevTuesday.setDate(prevTuesday.getDate() - (prevTuesday.getDay() + 5) % 7);
+	document.getElementById("date").valueAsDate = prevTuesday;
+</script>
